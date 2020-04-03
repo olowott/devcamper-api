@@ -3,6 +3,7 @@ const dotenv = require('dotenv'); // store access keys
 const morgan = require('morgan'); // middleware Op
 const colors = require('colors'); // color console code Op
 const connectDB = require('./config/db'); // bring in connection to mongoDB Db
+const errorHandler = require('./middleware/error'); //costum middleware error using express
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -37,6 +38,9 @@ const bootcamps = require('./routes/bootcamps');
 
 // Mount routers
 app.use('/api/v1/bootcamps', bootcamps);
+
+//error handle middleware
+app.use(errorHandler);
 
 //Dev loggin middleware
 if (process.env.NODE_ENV === 'development') {
