@@ -14,7 +14,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   const reqQuery = { ...req.query };
 
   //Fields to exclude from query search or selection
-  const removeFields = ['select', 'sort'];
+  const removeFields = ['select', 'sort', 'page', 'limit'];
 
   //loop over removeFields and delete them fro reqQuery
   removeFields.forEach(param => delete reqQuery[param]);
@@ -42,11 +42,40 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     query = query.sort('-createAt');
   }
 
+  //Pagination
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 25;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total = await Bootcamp.countDocuments();
+
+  query = query.skip(startIndex).limit(limit);
+
   //Executing our query
   const bootcamps = await query;
-  res
-    .status(200)
-    .json({ Success: true, count: bootcamps.length, data: bootcamps });
+
+  //Pagintation result
+  const pagination = {};
+
+  if (endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit
+    };
+  }
+  if (startIndex > 0) {
+    pagination.prev = {
+      page: page - 1,
+      limit
+    };
+  }
+
+  res.status(200).json({
+    Success: true,
+    count: bootcamps.length,
+    pagination: pagination,
+    data: bootcamps
+  });
 });
 
 //@desc     Get single bootcamp
