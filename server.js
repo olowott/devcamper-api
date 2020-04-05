@@ -6,6 +6,7 @@ const colors = require('colors'); // color console code Op
 const connectDB = require('./config/db'); // bring in connection to mongoDB Db
 const errorHandler = require('./middleware/error'); //costum middleware error using express
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -17,6 +18,9 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+
+//Cookie Parser
+app.use(cookieParser());
 
 //run the server
 const PORT = process.env.PORT || 5000;
