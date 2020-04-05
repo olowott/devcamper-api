@@ -1,9 +1,11 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv'); // store access keys
 const morgan = require('morgan'); // middleware Op
 const colors = require('colors'); // color console code Op
 const connectDB = require('./config/db'); // bring in connection to mongoDB Db
 const errorHandler = require('./middleware/error'); //costum middleware error using express
+const fileUpload = require('express-fileupload');
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -32,6 +34,12 @@ process.on('unhandledRejection', (err, promise) => {
   //Close server & exit process
   server.close(() => process.exit(1));
 });
+
+// File uploading middleware
+app.use(fileUpload());
+
+// set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Route files
 const bootcamps = require('./routes/bootcamps');
