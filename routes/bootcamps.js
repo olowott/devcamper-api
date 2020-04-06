@@ -6,17 +6,17 @@ const {
   updateBootcamp,
   deleteBootcamp,
   getBootcampsInRadius,
-  bootcampPhotoUpload
+  bootcampPhotoUpload,
 } = require('../controllers/bootcamps');
 
 const Bootcamp = require('../models/Bootcamp');
-const advancedResults = require('../middleware/advancedResults'); // middleware for advance results
 
 //Include other resousce routers
 const courseRouter = require('./courses');
 
 const router = express.Router();
 
+const advancedResults = require('../middleware/advancedResults'); // middleware for advance results
 const { protect, authorize } = require('../middleware/auth');
 
 //Re-route into other resource routers
