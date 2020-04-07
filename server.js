@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const xss = require('xss-clean');
 const dotenv = require('dotenv'); // store access keys
 const morgan = require('morgan'); // middleware Op
 const colors = require('colors'); // color console code Op
@@ -47,6 +48,9 @@ app.use(mongoSanitize());
 
 //Set security headers
 app.use(helmet());
+
+//Prevent Xss attacks
+app.use(xss());
 
 // File uploading middleware
 app.use(fileUpload());
