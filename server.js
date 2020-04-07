@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const mongoSanitize = require('express-mongo-sanitize');
 const dotenv = require('dotenv'); // store access keys
 const morgan = require('morgan'); // middleware Op
 const colors = require('colors'); // color console code Op
@@ -38,6 +39,10 @@ process.on('unhandledRejection', (err, promise) => {
   //Close server & exit process
   server.close(() => process.exit(1));
 });
+
+//Sanitise dats
+// To remove data, use:
+app.use(mongoSanitize());
 
 // File uploading middleware
 app.use(fileUpload());
