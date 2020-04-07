@@ -3,6 +3,8 @@ const express = require('express');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
 const dotenv = require('dotenv'); // store access keys
 const morgan = require('morgan'); // middleware Op
 const colors = require('colors'); // color console code Op
@@ -51,6 +53,16 @@ app.use(helmet());
 
 //Prevent Xss attacks
 app.use(xss());
+
+//Rate limiting
+const limiter = rateLimit({
+  windowsMs: 10 * 60 * 1000, //10 mins
+  max: 100,
+});
+app.use(limiter);
+
+// Prevent http param pollution
+app.use(hpp());
 
 // File uploading middleware
 app.use(fileUpload());
